@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { CloudBranchOfficeOrmEntity } from "../entities/cloud-branch-office.orm-entity";
 import { CloudBranchOfficeRepository } from "../../domain/repositories/cloud-branch-office.repository";
 import { DataSource } from "typeorm";
 import { CloudBranchOfficeEntity } from "../../domain/entities/cloud-branch-office.entity";
 import { CloudBranchOfficeMapper } from "../mappers/cloud-branch-office.mapper";
-import { TransactionDBRepository } from "src/config/database/typeorm/transaction/domain/repositories/transaction-repository";
+import { TRANSACTION_DB_REPOSITORIO, TransactionDBRepository } from "src/config/database/typeorm/transaction/domain/repositories/transaction-repository";
 
 @Injectable()
 export class TypeormCloudBranchOfficeRepository implements CloudBranchOfficeRepository {
@@ -14,6 +14,7 @@ export class TypeormCloudBranchOfficeRepository implements CloudBranchOfficeRepo
 
   constructor(
     private readonly dataSource: DataSource,
+    @Inject(TRANSACTION_DB_REPOSITORIO)
     private readonly tDB: TransactionDBRepository,
   ) {
     this.ormBranchOfficeRepository = this.dataSource.getRepository<CloudBranchOfficeOrmEntity>(CloudBranchOfficeOrmEntity);
@@ -21,33 +22,39 @@ export class TypeormCloudBranchOfficeRepository implements CloudBranchOfficeRepo
   }
 
   async save(entity: CloudBranchOfficeEntity): Promise<CloudBranchOfficeEntity> {
-    let branchExist = await this.ormBranchOfficeRepository.findOneBy({cloudBranchOfficeId: entity.cloudBranchOfficeId});
-    if(branchExist){
-      branchExist = {
-        ...branchExist,
-        name: branchExist.name,
-        deletedAt: branchExist.deletedAt
+    try {
+      let branchExist = await this.ormBranchOfficeRepository.findOneBy({cloudBranchOfficeId: entity.cloudBranchOfficeId});
+      console.log(entity);
+      if(branchExist){
+        branchExist = {
+          ...branchExist,
+          name: branchExist.name,
+          deletedAt: branchExist.deletedAt
+        }
+        // Guardar la entidad
+        const resp = await this.transactionDB.save(branchExist); // El cascade se encargará de guardar/actualizar la dirección
+        
+        // Convertir una entidad de Typeorm a una entidad de dominio
+        const domainEntity = CloudBranchOfficeMapper.toDomain(resp);
+
+        return domainEntity;
       }
+    
+      // Conversion de una entidad de dominio a una entidad de Typeorm
+      const branchOrmEntity = CloudBranchOfficeMapper.toOrm(entity);
+      
+      
       // Guardar la entidad
-      const resp = await this.transactionDB.save(branchExist); // El cascade se encargará de guardar/actualizar la dirección
+      const resp = await this.transactionDB.save(branchOrmEntity); // El cascade se encargará de guardar/actualizar la dirección
       
       // Convertir una entidad de Typeorm a una entidad de dominio
       const domainEntity = CloudBranchOfficeMapper.toDomain(resp);
 
       return domainEntity;
+    } catch (error) {
+      console.log('Error SAVE BRANCH');
+      throw error;
     }
-  
-    // Conversion de una entidad de dominio a una entidad de Typeorm
-    const branchOrmEntity = CloudBranchOfficeMapper.toOrm(entity);
-    
-    
-    // Guardar la entidad
-    const resp = await this.transactionDB.save(branchOrmEntity); // El cascade se encargará de guardar/actualizar la dirección
-    
-    // Convertir una entidad de Typeorm a una entidad de dominio
-    const domainEntity = CloudBranchOfficeMapper.toDomain(resp);
-
-    return domainEntity;
   }
 
   async findById(id: bigint): Promise<CloudBranchOfficeEntity | null> {

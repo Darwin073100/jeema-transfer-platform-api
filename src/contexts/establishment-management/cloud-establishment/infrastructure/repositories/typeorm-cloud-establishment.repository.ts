@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, QueryFailedError, Repository } from 'typeorm';
 import { CloudEstablishmentRepository } from '../../domain/repositories/cloud-establishment.repository';
 import { CloudEstablishmentOrmEntity } from '../entities/cloud-establishment.orm-entity';
@@ -6,7 +6,7 @@ import { DAlreadyExistException } from '../../../../../shared/domain/exceptions/
 import { DNotFoundException } from '../../../../../shared/domain/exceptions/basics/d-not-found.exception';
 import { CloudEstablishmentMapper } from '../mappers/cloud-establishment.mapper';
 import { CloudEstablishmentEntity } from '../../domain/entities/cloud-establishment.entity';
-import { TransactionDBRepository } from 'src/config/database/typeorm/transaction/domain/repositories/transaction-repository';
+import { TRANSACTION_DB_REPOSITORIO, TransactionDBRepository } from 'src/config/database/typeorm/transaction/domain/repositories/transaction-repository';
 
 @Injectable()
 export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRepository {
@@ -15,6 +15,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
 
   constructor(
     private readonly datasource: DataSource,
+    @Inject(TRANSACTION_DB_REPOSITORIO)
     private readonly tDB: TransactionDBRepository,
   ) {
     this.repository = this.datasource.getRepository(CloudEstablishmentOrmEntity);

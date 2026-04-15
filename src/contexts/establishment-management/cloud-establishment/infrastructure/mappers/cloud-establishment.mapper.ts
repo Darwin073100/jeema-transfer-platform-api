@@ -18,7 +18,7 @@ export class CloudEstablishmentMapper{
         ormEntity.createdAt = domainEntity.createdAt;
         ormEntity.updatedAt = domainEntity.updatedAt;
         ormEntity.deletedAt = domainEntity.deletedAt;
-        ormEntity.cloudBranchOffices = domainEntity.cloudBranchOffices? domainEntity.cloudBranchOffices.map(item => CloudBranchOfficeMapper.toOrm(item)): null;
+        ormEntity.cloudBranchOffices = null;
         return ormEntity;
     } 
 

@@ -7,10 +7,12 @@ import { FindCloudEstablishmentByIdUseCase } from "./application/use-cases/find-
 import { RegisterCloudEstablishmentUseCase } from "./application/use-cases/register-cloud-establishment.use-case";
 import { UpdateCloudEstablishmentUseCase } from "./application/use-cases/update-establishment.use-case";
 import { CloudEstablishmentController } from "./presentation/controllers/cloud-establishment.controller";
+import { TransactionDBModule } from "src/config/database/typeorm/transaction/transaction-db.module";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([CloudEstablishmentOrmEntity])
+        TypeOrmModule.forFeature([CloudEstablishmentOrmEntity]),
+        TransactionDBModule
     ],
     controllers: [CloudEstablishmentController],
     providers: [
@@ -46,6 +48,8 @@ import { CloudEstablishmentController } from "./presentation/controllers/cloud-e
             ]
         },
     ],
-    exports: [],
+    exports: [
+        CLOUD_ESTABLISHMENT_REPOSITORY
+    ],
 })
 export class CloudEstablishmentModule { }

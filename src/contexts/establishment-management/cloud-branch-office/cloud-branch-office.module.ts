@@ -8,6 +8,7 @@ import { CLOUD_ESTABLISHMENT_REPOSITORY, CloudEstablishmentRepository } from "..
 import { TRANSACTION_DB_REPOSITORIO, TransactionDBRepository } from "src/config/database/typeorm/transaction/domain/repositories/transaction-repository";
 import { CloudEstablishmentModule } from "../cloud-establishment/cloud-establishment.module";
 import { TransactionDBModule } from "src/config/database/typeorm/transaction/transaction-db.module";
+import { CloudBranchOfficeController } from "./presentation/controllers/cloud-branch-office.controller";
 
 @Module({
     imports:[
@@ -15,7 +16,9 @@ import { TransactionDBModule } from "src/config/database/typeorm/transaction/tra
         CloudEstablishmentModule,
         TransactionDBModule
     ],
-    controllers: [],
+    controllers: [
+        CloudBranchOfficeController
+    ],
     providers: [
         {
             provide: CLOUD_BRANCH_OFFICE_REPOSITORY,
@@ -23,11 +26,11 @@ import { TransactionDBModule } from "src/config/database/typeorm/transaction/tra
         },
         {
             provide: RegisterCloudBranchAndCloudEstablishmentUseCase,
-            useFactory: (cloudEstablishmentRepo: CloudEstablishmentRepository, cloudBranchOfficeRepo: CloudBranchOfficeRepository, transactionDB: TransactionDBRepository)=> {
+            useFactory: (cloudBranchOfficeRepo: CloudBranchOfficeRepository, cloudEstablishmentRepo: CloudEstablishmentRepository, transactionDB: TransactionDBRepository)=> {
                 return new RegisterCloudBranchAndCloudEstablishmentUseCase(cloudBranchOfficeRepo, cloudEstablishmentRepo, transactionDB)
             },
             inject: [
-                CLOUD_ESTABLISHMENT_REPOSITORY, CLOUD_BRANCH_OFFICE_REPOSITORY, TRANSACTION_DB_REPOSITORIO
+                CLOUD_BRANCH_OFFICE_REPOSITORY, CLOUD_ESTABLISHMENT_REPOSITORY, TRANSACTION_DB_REPOSITORIO
             ]
         }
     ],

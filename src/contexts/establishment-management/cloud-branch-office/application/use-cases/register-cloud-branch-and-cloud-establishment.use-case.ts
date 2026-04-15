@@ -20,7 +20,6 @@ export class RegisterCloudBranchAndCloudEstablishmentUseCase {
                 const establishment = CloudEstablishmentEntity.create(dto.establishmentName, dto.enrollmentKey);
                 // Guardar el establecimiento
                 const establishmentResult = await this.cloudEstablishmentRepository.save(establishment);
-
                 // Creación de la entidad a guardar utilizando el id del establecimiento ya guardado
                 const branchOffice = CloudBranchOfficeEntity.create(dto.branchOfficeName, establishmentResult.cloudEstablishmentId, dto.localBranchOfficeId);
                 // Guardar la sucursal
@@ -30,9 +29,9 @@ export class RegisterCloudBranchAndCloudEstablishmentUseCase {
                 branchOfficeResult.updateEstablishment(establishmentResult);
                 // REtornamos la sucursal y el establecimiento
                 return branchOfficeResult;
-            });
+            }) as CloudBranchOfficeEntity;
         } catch (error) {
-            return error;
+            throw error;
         }
     }
 

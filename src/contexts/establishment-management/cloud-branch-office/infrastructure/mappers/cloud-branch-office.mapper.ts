@@ -15,11 +15,12 @@ export class CloudBranchOfficeMapper {
     const ormEntity = new CloudBranchOfficeOrmEntity();
     ormEntity.cloudBranchOfficeId = domainEntity.cloudBranchOfficeId;
     ormEntity.name = domainEntity.name;
+    ormEntity.localBranchOfficeId = domainEntity.localBranchOfficeId;
     ormEntity.cloudEstablishmentId = domainEntity.cloudEstablishmentId;
     ormEntity.createdAt = domainEntity.createdAt;
     ormEntity.updatedAt = domainEntity.updatedAt;
     ormEntity.deletedAt = domainEntity.deletedAt;
-    ormEntity.cloudEstablishment = domainEntity.cloudEstablishment ? CloudEstablishmentMapper.toOrm(domainEntity.cloudEstablishment) : null;
+    ormEntity.cloudEstablishment = null;
     return ormEntity;
   }
 
