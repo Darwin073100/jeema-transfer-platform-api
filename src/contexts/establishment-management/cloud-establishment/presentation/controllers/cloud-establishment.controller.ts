@@ -18,7 +18,7 @@ export class CloudEstablishmentController {
     async registerCloudEstablishment(@Body() command: RegisterCloudEstablishmentCommand){
         try {
             const result = await this.registerCloudEstablishmentUseCase.execute(command);
-            return CloudEstablishmentHttpMapper.toHttpREsponse(result);
+            return CloudEstablishmentHttpMapper.toHttpResponse(result);
         } catch (error) {
             if(error instanceof DNotFoundException){
                 throw new NotFoundException(error.message);
@@ -35,7 +35,7 @@ export class CloudEstablishmentController {
     async findCloudEstablishmentById(@Param('cloudEstablishmentId', ParseBigIntPipe ) cloudEstablishmentId: bigint){
         try {
             const result = await this.findCloudEstablishmentByIdUseCase.execute(cloudEstablishmentId);
-            return CloudEstablishmentHttpMapper.toHttpREsponse(result);
+            return CloudEstablishmentHttpMapper.toHttpResponse(result);
         } catch (error) {
             if(error instanceof DNotFoundException){
                 throw new NotFoundException(error.message);

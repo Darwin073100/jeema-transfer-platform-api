@@ -27,6 +27,7 @@ export class RegisterCloudBranchAndCloudEstablishmentUseCase {
 
                 // Asignamos el establecimiento a la entidad de retorno
                 branchOfficeResult.updateEstablishment(establishmentResult);
+                branchOfficeResult.updateCloudEstablishmentId(establishmentResult.cloudEstablishmentId);
                 // REtornamos la sucursal y el establecimiento
                 return branchOfficeResult;
             }) as CloudBranchOfficeEntity;

@@ -94,4 +94,8 @@ export class CloudBranchOfficeEntity {
         this._cloudEstablishment = entity;
         this._updatedAt = new Date();
     }
+    public updateCloudEstablishmentId(id: bigint){
+        this._cloudEstablishmentId = id;
+        this._updatedAt = new Date();
+    }
 }

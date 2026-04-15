@@ -3,6 +3,7 @@ import { RegisterCloudBranchAndCloudEstablishmentUseCase } from "../../applicati
 import { RegisterCloudBranchAndCloudEstablishmentComand } from "../commands/register-branch-and-establishment.command";
 import { DNotFoundException } from "src/shared/domain/exceptions/basics/d-not-found.exception";
 import { DAlreadyExistException } from "src/shared/domain/exceptions/basics/d-already-exist.exception";
+import { CloudBranchOfficeHttpMapper } from "../mappers/cloud-branch-office.http-mapper";
 
 @Controller('cloud-branch-offices')
 export class CloudBranchOfficeController {
@@ -15,7 +16,7 @@ export class CloudBranchOfficeController {
     async registerCloudBranchAndCloudEstablishment(@Body() command: RegisterCloudBranchAndCloudEstablishmentComand) {
         try {
             const result = await this.registerCloudBranchAndCloudEstablishmentUseCase.exceute(command);
-            return result;
+            return CloudBranchOfficeHttpMapper.toHttpResponse(result);
         } catch (error) {
             if (error instanceof DNotFoundException) {
                 throw new NotFoundException(error.message);

@@ -24,7 +24,6 @@ export class TypeormCloudBranchOfficeRepository implements CloudBranchOfficeRepo
   async save(entity: CloudBranchOfficeEntity): Promise<CloudBranchOfficeEntity> {
     try {
       let branchExist = await this.ormBranchOfficeRepository.findOneBy({cloudBranchOfficeId: entity.cloudBranchOfficeId});
-      console.log(entity);
       if(branchExist){
         branchExist = {
           ...branchExist,
@@ -52,7 +51,6 @@ export class TypeormCloudBranchOfficeRepository implements CloudBranchOfficeRepo
 
       return domainEntity;
     } catch (error) {
-      console.log('Error SAVE BRANCH');
       throw error;
     }
   }
