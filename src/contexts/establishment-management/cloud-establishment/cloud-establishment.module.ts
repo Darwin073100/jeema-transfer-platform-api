@@ -8,6 +8,7 @@ import { RegisterCloudEstablishmentUseCase } from "./application/use-cases/regis
 import { UpdateCloudEstablishmentUseCase } from "./application/use-cases/update-establishment.use-case";
 import { CloudEstablishmentController } from "./presentation/controllers/cloud-establishment.controller";
 import { TransactionDBModule } from "src/config/database/typeorm/transaction/transaction-db.module";
+import { GenerateEnrollmentKeyUseCase } from "./application/use-cases/generate-enrollment-key.use-case";
 
 @Module({
     imports: [
@@ -47,7 +48,17 @@ import { TransactionDBModule } from "src/config/database/typeorm/transaction/tra
                 CLOUD_ESTABLISHMENT_REPOSITORY
             ]
         },
+        {
+            provide: GenerateEnrollmentKeyUseCase,
+            useFactory: (repo: CloudEstablishmentRepository) => {
+                return new GenerateEnrollmentKeyUseCase(repo)
+            },
+            inject: [
+                CLOUD_ESTABLISHMENT_REPOSITORY
+            ]
+        },
     ],
+    
     exports: [
         CLOUD_ESTABLISHMENT_REPOSITORY
     ],

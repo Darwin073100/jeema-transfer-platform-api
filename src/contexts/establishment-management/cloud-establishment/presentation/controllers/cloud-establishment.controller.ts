@@ -6,12 +6,14 @@ import { DNotFoundException } from "src/shared/domain/exceptions/basics/d-not-fo
 import { DAlreadyExistException } from "src/shared/domain/exceptions/basics/d-already-exist.exception";
 import { FindCloudEstablishmentByIdUseCase } from "../../application/use-cases/find-cloud-establishment-by-id.use-case";
 import { ParseBigIntPipe } from "src/shared/pipes/parse-bigint.pipe";
+import { GenerateEnrollmentKeyUseCase } from "../../application/use-cases/generate-enrollment-key.use-case";
 
 @Controller('cloud-establishments')
 export class CloudEstablishmentController {
     constructor(
         private readonly registerCloudEstablishmentUseCase: RegisterCloudEstablishmentUseCase,
         private readonly findCloudEstablishmentByIdUseCase: FindCloudEstablishmentByIdUseCase,
+        private readonly generateEnrollmentKeyUseCase: GenerateEnrollmentKeyUseCase,
     ){}
     @Post()
     @HttpCode(HttpStatus.CREATED)
@@ -19,6 +21,25 @@ export class CloudEstablishmentController {
         try {
             const result = await this.registerCloudEstablishmentUseCase.execute(command);
             return CloudEstablishmentHttpMapper.toHttpResponse(result);
+        } catch (error) {
+            if(error instanceof DNotFoundException){
+                throw new NotFoundException(error.message);
+            }
+            if(error instanceof DAlreadyExistException){
+                throw new BadRequestException(error.message);
+            }
+            throw error;
+        }
+    }
+
+    @Get('enrollment-keys')
+    @HttpCode(HttpStatus.OK)
+    async generateEnrollmentKey(){
+        try {
+            const result = await this.generateEnrollmentKeyUseCase.execute();
+            return {
+                enrollmentKey: result
+            };
         } catch (error) {
             if(error instanceof DNotFoundException){
                 throw new NotFoundException(error.message);

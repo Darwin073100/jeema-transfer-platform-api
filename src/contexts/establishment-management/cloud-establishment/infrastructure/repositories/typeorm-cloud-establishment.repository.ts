@@ -103,4 +103,16 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
 
     return CloudEstablishmentMapper.toDomain(ormEntity);
   }
+
+  async existByEnrollmentKey(enrollmentKey: string): Promise<CloudEstablishmentEntity | null>{
+    const ormEntity = await this.repository.findOne({
+      where: { enrollmentKey }
+    });
+
+    if (!ormEntity) {
+      return null;
+    }
+
+    return CloudEstablishmentMapper.toDomain(ormEntity);
+  }
 }
