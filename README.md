@@ -1,35 +1,45 @@
-# EdyOf Platform API
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="380" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
 ## Comandos a ejecutar
-1. Copiar y renombrar el __.env.template__ a un __.env__ y cambiar los valores de las propiedades si es necesario.
+### Crear la base de datos 
+Crea la base de datos para el sistema, asegurate de escribir el nombre de la base de datos como `jeema_transfer_platform_db`.
 
-2. Levantar el contenedor de docker
+### Configurar variables de entorno 
+Copiar y renombrar el __.env.template__ a un __.env__ y cambiar los valores de las propiedades si es necesario.
+
+### Ejecutar las migraciones de la base de batos
 ``` bash
-docker compose up -d
-```
+# Este script corre las migraciones
+pnpm run migration:run
+# Este script crea una migración despues de haber modificado una entidad de TypeOrm
+pnpm run migration:generate <migration_name>
+# Este script revierte la ultima migración
+pnpm run migration:revert
+``` 
 
-3. Instala el manejador de paquetes __pnpm__
+### Instala el manejador de paquetes __pnpm__
 ``` bash
 npm install -g pnpm 
 ``` 
 
-4. Instalar las dependencias del proyecto
+### Instalar las dependencias del proyecto
 ``` bash
 pnpm install 
 ``` 
 
-5. Correr las migraciones para crear las entidades
+### Inicia el proyecto
 ``` bash
-pnpm run migration:run
+# development
+$ pnpm run start
+
+# watch mode
+$ pnpm run start:dev
+
+# production mode
+$ pnpm run start:prod
 ```
-
-6. Ejecutar el Script inicial, con los datos iniciales y necesarios para el proyecto initial-data-postgres-script.sql
-
-7. Correr el proyecto en modo desarrollo
-``` bash
-pnpm run start:dev 
-``` 
-
