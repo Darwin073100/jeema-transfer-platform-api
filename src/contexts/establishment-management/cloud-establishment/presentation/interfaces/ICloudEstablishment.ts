@@ -1,5 +1,5 @@
 export interface ICloudEstablishment {
-  cloudEstablishmentId: bigint,
+  cloudEstablishmentId: string,
   name: string,
   createdAt: Date,
   updatedAt: Date | null,

@@ -44,7 +44,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
       if(error instanceof QueryFailedError){
         const  pgError = error as any;
         if(pgError.code === '23505'){
-          throw new DAlreadyExistException('Ya existe un establecimiento con ese nombre.');
+          throw new DAlreadyExistException('La clave de registro o el nombre del establecimiento ya existe.');
         }
         if(pgError.code === '23503'){
           throw new DNotFoundException('Establecimeinto no encontrado.');
