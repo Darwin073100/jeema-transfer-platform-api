@@ -6,6 +6,7 @@ export class CloudEstablishmentHttpMapper {
         return {
             cloudEstablishmentId: entity.cloudEstablishmentId.toString(),
             name: entity.name,
+            enrollmentKey: entity.enrollmentKey,
             createdAt: entity.createdAt,
             deletedAt: entity.deletedAt,
             updatedAt: entity.updatedAt,
