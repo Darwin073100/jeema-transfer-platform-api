@@ -8,6 +8,11 @@ export interface TransactionDBRepository<T = any> {
 
   /** Revierte la transacción. */
   rollback(): Promise<void>;
+
+  /**
+   * NUEVO MÉTODO: Ejecuta todo dentro de un contexto seguro
+   */
+  runInTransaction<T>(operation: () => Promise<T>): Promise<T>
   
   /** Método auxiliar para que los repositorios obtengan el EntityManager activo. */
   getManager(): T;

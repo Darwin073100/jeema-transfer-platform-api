@@ -40,6 +40,32 @@ export class TypeormTransactionRepository implements TransactionDBRepository<Ent
     }
   }
 
+  async runInTransaction<T>(operation: () => Promise<T>): Promise<T> {
+    // Si ya estamos dentro de una transacción, simplemente ejecutamos la operación
+    if (asyncLocalStorage.getStore()) {
+      return await operation();
+    }
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    // Utilizamos .run() que limpia automáticamente al salir
+    return asyncLocalStorage.run(queryRunner, async () => {
+      try {
+        const result = await operation();
+        await queryRunner.commitTransaction();
+        return result;
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        throw error;
+      } finally {
+        // Garantía absoluta: la conexión SIEMPRE se libera, incluso con errores
+        await queryRunner.release();
+      }
+    });
+  }
+
   // Implementación del rollback
   async rollback(): Promise<void> {
     const queryRunner = asyncLocalStorage.getStore();
