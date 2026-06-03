@@ -5,13 +5,19 @@ import { CloudBranchOfficeRepository } from "../../domain/repositories/cloud-bra
 import { DataSource } from "typeorm";
 import { CloudBranchOfficeEntity } from "../../domain/entities/cloud-branch-office.entity";
 import { CloudBranchOfficeMapper } from "../mappers/cloud-branch-office.mapper";
+import { TransactionDBRepository } from "src/config/database/typeorm/transaction/domain/repositories/transaction-repository";
 
 @Injectable()
 export class TypeormCloudBranchOfficeRepository implements CloudBranchOfficeRepository {
-  private ormBranchOfficeRepository: Repository<CloudBranchOfficeOrmEntity>;
+  private readonly ormBranchOfficeRepository: Repository<CloudBranchOfficeOrmEntity>;
+  private readonly transactionDB: Repository<CloudBranchOfficeOrmEntity>;
 
-  constructor(private readonly dataSource: DataSource) {
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly tDB: TransactionDBRepository,
+  ) {
     this.ormBranchOfficeRepository = this.dataSource.getRepository<CloudBranchOfficeOrmEntity>(CloudBranchOfficeOrmEntity);
+    this.transactionDB = this.tDB.getManager().getRepository(CloudBranchOfficeOrmEntity);
   }
 
   async save(entity: CloudBranchOfficeEntity): Promise<CloudBranchOfficeEntity> {
@@ -23,7 +29,7 @@ export class TypeormCloudBranchOfficeRepository implements CloudBranchOfficeRepo
         deletedAt: branchExist.deletedAt
       }
       // Guardar la entidad
-      const resp = await this.ormBranchOfficeRepository.save(branchExist); // El cascade se encargará de guardar/actualizar la dirección
+      const resp = await this.transactionDB.save(branchExist); // El cascade se encargará de guardar/actualizar la dirección
       
       // Convertir una entidad de Typeorm a una entidad de dominio
       const domainEntity = CloudBranchOfficeMapper.toDomain(resp);
@@ -36,7 +42,7 @@ export class TypeormCloudBranchOfficeRepository implements CloudBranchOfficeRepo
     
     
     // Guardar la entidad
-    const resp = await this.ormBranchOfficeRepository.save(branchOrmEntity); // El cascade se encargará de guardar/actualizar la dirección
+    const resp = await this.transactionDB.save(branchOrmEntity); // El cascade se encargará de guardar/actualizar la dirección
     
     // Convertir una entidad de Typeorm a una entidad de dominio
     const domainEntity = CloudBranchOfficeMapper.toDomain(resp);
