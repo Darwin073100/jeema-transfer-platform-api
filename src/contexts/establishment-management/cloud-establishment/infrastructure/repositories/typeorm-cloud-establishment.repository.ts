@@ -6,13 +6,19 @@ import { DAlreadyExistException } from '../../../../../shared/domain/exceptions/
 import { DNotFoundException } from '../../../../../shared/domain/exceptions/basics/d-not-found.exception';
 import { CloudEstablishmentMapper } from '../mappers/cloud-establishment.mapper';
 import { CloudEstablishmentEntity } from '../../domain/entities/cloud-establishment.entity';
+import { TransactionDBRepository } from 'src/config/database/typeorm/transaction/domain/repositories/transaction-repository';
 
 @Injectable()
 export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRepository {
   private readonly repository: Repository<CloudEstablishmentOrmEntity>;
+  private readonly transactionDB: Repository<CloudEstablishmentOrmEntity>;
 
-  constructor(private readonly datasource: DataSource) {
+  constructor(
+    private readonly datasource: DataSource,
+    private readonly tDB: TransactionDBRepository,
+  ) {
     this.repository = this.datasource.getRepository(CloudEstablishmentOrmEntity);
+    this.transactionDB = this.tDB.getManager().getRepository(CloudEstablishmentOrmEntity);
   }
 
   /**
@@ -38,7 +44,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
         ormEntity = CloudEstablishmentMapper.toOrm(cloudEstablishment);
       }
 
-      const savedOrmEntity = await this.repository.save(ormEntity);
+      const savedOrmEntity = await this.transactionDB.save(ormEntity);
       return CloudEstablishmentMapper.toDomain(savedOrmEntity);
     } catch (error) {
       if(error instanceof QueryFailedError){

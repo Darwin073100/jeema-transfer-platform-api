@@ -90,4 +90,8 @@ export class CloudBranchOfficeEntity {
         this._name = CloudBranchOfficeNameVO.create(name);
         this._updatedAt = new Date();
     }
+    public updateEstablishment(entity: CloudEstablishmentEntity | null){
+        this._cloudEstablishment = entity;
+        this._updatedAt = new Date();
+    }
 }
