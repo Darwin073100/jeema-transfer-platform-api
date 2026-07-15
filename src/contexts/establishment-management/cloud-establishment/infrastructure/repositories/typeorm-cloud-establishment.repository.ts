@@ -48,12 +48,12 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
       const savedOrmEntity = await this.transactionDB.save(ormEntity);
       return CloudEstablishmentMapper.toDomain(savedOrmEntity);
     } catch (error) {
-      if(error instanceof QueryFailedError){
-        const  pgError = error as any;
-        if(pgError.code === '23505'){
+      if (error instanceof QueryFailedError) {
+        const pgError = error as any;
+        if (pgError.code === '23505') {
           throw new DAlreadyExistException('La clave de registro o el nombre del establecimiento ya existe.');
         }
-        if(pgError.code === '23503'){
+        if (pgError.code === '23503') {
           throw new DNotFoundException('Establecimeinto no encontrado.');
         }
       }
@@ -71,7 +71,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
    */
   async findById(id: bigint): Promise<CloudEstablishmentEntity | null> {
     const ormEntity = await this.repository.findOne({
-      where: { cloudEstablishmentId: id},
+      where: { cloudEstablishmentId: id },
       relations: {
         cloudBranchOffices: true
       }
@@ -84,15 +84,25 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
     return CloudEstablishmentMapper.toDomain(ormEntity);
   }
 
-  delete(entityId: bigint): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async delete(entityId: bigint): Promise<boolean> {
+    try {
+      const exist = await this.repository.findOneBy({ cloudEstablishmentId: entityId });
+      if (!exist) {
+        throw new DNotFoundException(`No encontramos el establecimiento en la nube con id ${entityId}.`);
+      }
+      await this.repository.query(`DELETE FROM cloud_establishment WHERE(cloud_establishment_id=${entityId});`);
+
+      return true;
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll(): Promise<CloudEstablishmentEntity[]> {
     throw new Error('Method not implemented.');
   }
 
-  async existById(cloudEstablishmentId: bigint): Promise<CloudEstablishmentEntity | null>{
+  async existById(cloudEstablishmentId: bigint): Promise<CloudEstablishmentEntity | null> {
     const ormEntity = await this.repository.findOne({
       where: { cloudEstablishmentId }
     });
@@ -104,7 +114,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
     return CloudEstablishmentMapper.toDomain(ormEntity);
   }
 
-  async existByEnrollmentKey(enrollmentKey: string): Promise<CloudEstablishmentEntity | null>{
+  async existByEnrollmentKey(enrollmentKey: string): Promise<CloudEstablishmentEntity | null> {
     const ormEntity = await this.repository.findOne({
       where: { enrollmentKey }
     });

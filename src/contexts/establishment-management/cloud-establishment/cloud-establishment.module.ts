@@ -9,6 +9,7 @@ import { UpdateCloudEstablishmentUseCase } from "./application/use-cases/update-
 import { CloudEstablishmentController } from "./presentation/controllers/cloud-establishment.controller";
 import { TransactionDBModule } from "src/config/database/typeorm/transaction/transaction-db.module";
 import { GenerateEnrollmentKeyUseCase } from "./application/use-cases/generate-enrollment-key.use-case";
+import { DeleteCloudEstablishmentPhisicalUseCase } from "./application/use-cases/delete-cloud-establishment-phisical.use-case";
 
 @Module({
     imports: [
@@ -34,6 +35,16 @@ import { GenerateEnrollmentKeyUseCase } from "./application/use-cases/generate-e
             provide: RegisterCloudEstablishmentUseCase,
             useFactory: (repo: CloudEstablishmentRepository) => {
                 return new RegisterCloudEstablishmentUseCase(repo)
+            },
+            inject: [
+                CLOUD_ESTABLISHMENT_REPOSITORY
+            ]
+        },
+        {
+
+            provide: DeleteCloudEstablishmentPhisicalUseCase,
+            useFactory: (repo: CloudEstablishmentRepository) => {
+                return new DeleteCloudEstablishmentPhisicalUseCase(repo)
             },
             inject: [
                 CLOUD_ESTABLISHMENT_REPOSITORY
