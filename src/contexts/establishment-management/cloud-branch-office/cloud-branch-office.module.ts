@@ -9,6 +9,7 @@ import { TRANSACTION_DB_REPOSITORIO, TransactionDBRepository } from "src/config/
 import { CloudEstablishmentModule } from "../cloud-establishment/cloud-establishment.module";
 import { TransactionDBModule } from "src/config/database/typeorm/transaction/transaction-db.module";
 import { CloudBranchOfficeController } from "./presentation/controllers/cloud-branch-office.controller";
+import { RegisterCloudBranchUseCase } from "./application/use-cases/register-cloud-branch.use-case";
 
 @Module({
     imports:[
@@ -28,6 +29,15 @@ import { CloudBranchOfficeController } from "./presentation/controllers/cloud-br
             provide: RegisterCloudBranchAndCloudEstablishmentUseCase,
             useFactory: (cloudBranchOfficeRepo: CloudBranchOfficeRepository, cloudEstablishmentRepo: CloudEstablishmentRepository, transactionDB: TransactionDBRepository)=> {
                 return new RegisterCloudBranchAndCloudEstablishmentUseCase(cloudBranchOfficeRepo, cloudEstablishmentRepo, transactionDB)
+            },
+            inject: [
+                CLOUD_BRANCH_OFFICE_REPOSITORY, CLOUD_ESTABLISHMENT_REPOSITORY, TRANSACTION_DB_REPOSITORIO
+            ]
+        },
+        {
+            provide: RegisterCloudBranchUseCase,
+            useFactory: (cloudBranchOfficeRepo: CloudBranchOfficeRepository, cloudEstablishmentRepo: CloudEstablishmentRepository, transactionDB: TransactionDBRepository)=> {
+                return new RegisterCloudBranchUseCase(cloudBranchOfficeRepo, cloudEstablishmentRepo, transactionDB)
             },
             inject: [
                 CLOUD_BRANCH_OFFICE_REPOSITORY, CLOUD_ESTABLISHMENT_REPOSITORY, TRANSACTION_DB_REPOSITORIO

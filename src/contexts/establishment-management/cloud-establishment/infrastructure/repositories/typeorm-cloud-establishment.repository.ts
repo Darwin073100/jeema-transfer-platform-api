@@ -84,6 +84,21 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
     return CloudEstablishmentMapper.toDomain(ormEntity);
   }
 
+  async findByEnrollmentKey(enrollmentKey: string): Promise<CloudEstablishmentEntity | null> {
+    const ormEntity = await this.repository.findOne({
+      where: { enrollmentKey },
+      relations: {
+        cloudBranchOffices: true
+      }
+    });
+
+    if (!ormEntity) {
+      return null;
+    }
+
+    return CloudEstablishmentMapper.toDomain(ormEntity);
+  }
+
   async delete(entityId: bigint): Promise<boolean> {
     try {
       const exist = await this.repository.findOneBy({ cloudEstablishmentId: entityId });

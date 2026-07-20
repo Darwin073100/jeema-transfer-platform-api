@@ -5,4 +5,5 @@ export const CLOUD_ESTABLISHMENT_REPOSITORY = Symbol('CLOUD_ESTABLISHMENT_REPOSI
 
 export interface CloudEstablishmentRepository extends TemplateRepository<CloudEstablishmentEntity> {
     existByEnrollmentKey(enrollmentKey: string): Promise<CloudEstablishmentEntity | null>;
+    findByEnrollmentKey(enrollmentKey: string): Promise<CloudEstablishmentEntity | null>;
 }
