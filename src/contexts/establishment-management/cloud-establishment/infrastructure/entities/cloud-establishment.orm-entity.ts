@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { TemplateOrmEntity } from '../../../../../shared/infraestructure/typeorm/template.orm-entity';
 import { CloudBranchOfficeOrmEntity } from '../../../cloud-branch-office/infrastructure/entities/cloud-branch-office.orm-entity';
+import { CloudTransferOrmEntity } from 'src/contexts/transfer-management/cloud-transfer/infrastructure/entities/cloud-transfer.orm-entity';
 
 /**
  * CloudEstablishmentOrmEntity es una entidad de TypeORM que representa la tabla
@@ -12,11 +13,13 @@ import { CloudBranchOfficeOrmEntity } from '../../../cloud-branch-office/infrast
 @Entity('cloud_establishment') // Mapea esta clase a la tabla 'cloud_establishment'
 export class CloudEstablishmentOrmEntity extends TemplateOrmEntity {
   @PrimaryGeneratedColumn('increment', { type: 'bigint', name: 'cloud_establishment_id' })
-  cloudEstablishmentId: bigint; // Usamos bigint para corresponder con bigserial de PostgreSQL
+  cloudEstablishmentId!: bigint; // Usamos bigint para corresponder con bigserial de PostgreSQL
   @Column({ type: 'varchar', length: 250, unique: true, nullable: false })
-  name: string;
+  name!: string;
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
-  enrollmentKey: string;
+  enrollmentKey!: string;
   @OneToMany(()=> CloudBranchOfficeOrmEntity, cloudBranchOffice=> cloudBranchOffice.cloudEstablishment)
-  cloudBranchOffices: CloudBranchOfficeOrmEntity[]|null;
+  cloudBranchOffices!: CloudBranchOfficeOrmEntity[]|null;
+  @OneToMany(()=> CloudTransferOrmEntity, (item)=> item.cloudEstablishment)
+  cloudTransfer!: CloudTransferOrmEntity[]|null;
 }
