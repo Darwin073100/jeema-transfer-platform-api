@@ -14,9 +14,9 @@ import { CloudTransferOrmEntity } from 'src/contexts/transfer-management/cloud-t
 export class CloudEstablishmentOrmEntity extends TemplateOrmEntity {
   @PrimaryGeneratedColumn('increment', { type: 'bigint', name: 'cloud_establishment_id' })
   cloudEstablishmentId!: bigint; // Usamos bigint para corresponder con bigserial de PostgreSQL
-  @Column({ type: 'varchar', length: 250, unique: true, nullable: false })
+  @Column({ type: 'varchar', length: 150, nullable: false })
   name!: string;
-  @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
+  @Column({ type: 'varchar', length: 255, name: 'enrollment_key', unique: true, nullable: false })
   enrollmentKey!: string;
   @OneToMany(()=> CloudBranchOfficeOrmEntity, cloudBranchOffice=> cloudBranchOffice.cloudEstablishment)
   cloudBranchOffices!: CloudBranchOfficeOrmEntity[]|null;

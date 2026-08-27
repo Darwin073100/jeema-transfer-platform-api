@@ -1,10 +1,11 @@
 import { CloudBranchOfficeOrmEntity } from "src/contexts/establishment-management/cloud-branch-office/infrastructure/entities/cloud-branch-office.orm-entity";
 import { CloudEstablishmentOrmEntity } from "src/contexts/establishment-management/cloud-establishment/infrastructure/entities/cloud-establishment.orm-entity";
 import { TemplateOrmEntity } from "src/shared/infraestructure/typeorm/template.orm-entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { CloudTransferStatusEnum } from "../../domain/enums/CloudTransferStatusEnum";
 
 @Entity({name: 'cloud_transfer'})
+@Index(['toCloudBranchId', 'status'])
 export class CloudTransferOrmEntity extends TemplateOrmEntity{
     @PrimaryGeneratedColumn('increment', { type: 'bigint', name: 'cloud_transfer_id' })
     cloudTransferId!: bigint;
@@ -18,7 +19,7 @@ export class CloudTransferOrmEntity extends TemplateOrmEntity{
     localTransferId!: bigint;
     @Column({type: 'jsonb', name: 'payload'})
     payload!: any;
-    @Column('enum',{enum: CloudTransferStatusEnum, name: 'status' })
+    @Column('enum',{enum: CloudTransferStatusEnum, name: 'status', default: CloudTransferStatusEnum.PENDING })
     status!: CloudTransferStatusEnum;
     @ManyToOne(() => CloudEstablishmentOrmEntity, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'cloud_establishment_id' })
