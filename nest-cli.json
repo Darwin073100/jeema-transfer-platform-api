@@ -9,6 +9,15 @@
         "include": "assets/**/*",
         "watchAssets": true
       }
+    ],
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "dtoFileNameSuffix": [".dto.ts", ".command.ts"],
+          "introspectComments": true
+        }
+      }
     ]
   }
 }

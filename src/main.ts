@@ -6,6 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './shared/presentation/http/filters/all-exceptions.filter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 /**
  * Inicializa la aplicación NestJS y configura middlewares globales.
@@ -39,16 +40,19 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  //  // Configurar Swagger
-  // const config = new DocumentBuilder()
-  //   .setTitle('Educational Center Management API')
-  //   .setDescription('API for managing educational centers within the system.')
-  //   .setVersion('1.0')
-  //   .addTag('Educational Centers')
-  //   .build();
-  // const document = SwaggerModule.createDocument(app, config);
-  // SwaggerModule.setup('api', app, document); // La interfaz de Swagger estará en /api
-  
+  // Configurar Swagger / OpenAPI
+  const config = new DocumentBuilder()
+    .setTitle('JEEMA Transfer Platform API')
+    .setDescription(
+      'API para la gestión de establecimientos, sucursales e inscripción de sucursales mediante clave de inscripción (enrollmentKey), como base del servicio de traspasos entre sucursales.',
+    )
+    .setVersion('1.0')
+    .addTag('Cloud Establishments', 'Alta y consulta de establecimientos en la nube y sus claves de inscripción.')
+    .addTag('Cloud Branch Offices', 'Alta e inscripción de sucursales pertenecientes a un establecimiento.')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document); // La interfaz de Swagger estará en /api/docs
+
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
