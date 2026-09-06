@@ -6,6 +6,8 @@ import { DAlreadyExistException } from "src/shared/domain/exceptions/basics/d-al
 import { CloudBranchOfficeHttpMapper } from "../mappers/cloud-branch-office.http-mapper";
 import { RegisterCloudBranchCommand } from "../commands/register-branch.command";
 import { RegisterCloudBranchUseCase } from "../../application/use-cases/register-cloud-branch.use-case";
+import { RegisterCloudBranchAndCloudEstablishmentDTO } from "../../application/dtos/register-branch-and-establishment.dto";
+import { RegisterCloudBranchDTO } from "../../application/dtos/register-branch.dto";
 
 @Controller('cloud-branch-offices')
 export class CloudBranchOfficeController {
@@ -17,8 +19,13 @@ export class CloudBranchOfficeController {
     @Post('all')
     @HttpCode(HttpStatus.CREATED)
     async registerCloudBranchAndCloudEstablishment(@Body() command: RegisterCloudBranchAndCloudEstablishmentComand) {
+        console.log(command);
         try {
-            const result = await this.registerCloudBranchAndCloudEstablishmentUseCase.exceute(command);
+            const dto: RegisterCloudBranchAndCloudEstablishmentDTO = {
+                ...command,
+                localBranchOfficeId: BigInt(command.localBranchOfficeId),
+            };
+            const result = await this.registerCloudBranchAndCloudEstablishmentUseCase.execute(dto);
             return CloudBranchOfficeHttpMapper.toHttpResponse(result);
         } catch (error) {
             if (error instanceof DNotFoundException) {
@@ -36,7 +43,11 @@ export class CloudBranchOfficeController {
     @HttpCode(HttpStatus.CREATED)
     async registerCloudBranch(@Body() command: RegisterCloudBranchCommand) {
         try {
-            const result = await this.registerCloudBranchUseCase.exceute(command);
+            const dto: RegisterCloudBranchDTO = {
+                ...command,
+                localBranchOfficeId: BigInt(command.localBranchOfficeId),
+            };
+            const result = await this.registerCloudBranchUseCase.execute(dto);
             return CloudBranchOfficeHttpMapper.toHttpResponse(result);
         } catch (error) {
             if (error instanceof DNotFoundException) {

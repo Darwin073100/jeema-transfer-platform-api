@@ -12,7 +12,7 @@ export class RegisterCloudBranchUseCase {
         readonly transactionDB: TransactionDBRepository,
     ){}
 
-    async exceute(dto: RegisterCloudBranchDTO){
+    async execute(dto: RegisterCloudBranchDTO){
         try {
             // Englobar la logica en una transacción para evitar inconsistencia a la hora de persistir
             return await this.transactionDB.runInTransaction(async ()=> {
@@ -28,7 +28,6 @@ export class RegisterCloudBranchUseCase {
 
                 // Asignamos el establecimiento a la entidad de retorno
                 branchOfficeResult.updateEstablishment(establishment);
-                branchOfficeResult.updateCloudEstablishmentId(establishment.cloudEstablishmentId);
                 // REtornamos la sucursal y el establecimiento
                 return branchOfficeResult;
             }) as CloudBranchOfficeEntity;

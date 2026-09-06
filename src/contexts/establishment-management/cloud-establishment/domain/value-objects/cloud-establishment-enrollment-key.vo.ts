@@ -12,7 +12,7 @@ export class CloudEstablishmentEnrollmentVO {
             throw new DInvalidException('La llave debe tener mas de 3 caracteres');
         }
         if(value.trim().length > 250){
-            throw new DInvalidException('La llave es muy larga. Máximo 255 caracteres.');
+            throw new DInvalidException('La llave es muy larga. Máximo 250 caracteres.');
         }
         return new CloudEstablishmentEnrollmentVO(value);
     }

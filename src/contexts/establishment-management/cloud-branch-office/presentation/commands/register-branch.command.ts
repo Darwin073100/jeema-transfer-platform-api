@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumberString, IsString, MaxLength, MinLength } from "clas
 export class RegisterCloudBranchCommand {
     @IsNumberString({}, {message: 'El id de la sucursal local es una cadena numérica.'})
     @IsNotEmpty({message: 'El id de la sucursal local es necesario.'})
-    readonly localBranchOfficeId: bigint;
+    readonly localBranchOfficeId: string;
     @IsString({ message: 'El nombre de la sucursal no puede ser un número.' })
     @IsNotEmpty({ message: 'El nombre de la sucursal no puede estar vacío.' })
     @MinLength(3, { message: 'El nombre de la sucursal debe tener como mínimo 3 caracteres.' })

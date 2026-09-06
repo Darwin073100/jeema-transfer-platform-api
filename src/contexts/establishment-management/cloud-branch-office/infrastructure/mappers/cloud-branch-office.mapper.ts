@@ -20,7 +20,6 @@ export class CloudBranchOfficeMapper {
     ormEntity.createdAt = domainEntity.createdAt;
     ormEntity.updatedAt = domainEntity.updatedAt;
     ormEntity.deletedAt = domainEntity.deletedAt;
-    ormEntity.cloudEstablishment = null;
     return ormEntity;
   }
 

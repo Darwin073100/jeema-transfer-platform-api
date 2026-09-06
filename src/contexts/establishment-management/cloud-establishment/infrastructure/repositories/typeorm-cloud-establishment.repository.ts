@@ -10,16 +10,14 @@ import { TRANSACTION_DB_REPOSITORIO, TransactionDBRepository } from 'src/config/
 
 @Injectable()
 export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRepository {
-  private readonly repository: Repository<CloudEstablishmentOrmEntity>;
-  private readonly transactionDB: Repository<CloudEstablishmentOrmEntity>;
-
   constructor(
     private readonly datasource: DataSource,
     @Inject(TRANSACTION_DB_REPOSITORIO)
     private readonly tDB: TransactionDBRepository,
-  ) {
-    this.repository = this.datasource.getRepository(CloudEstablishmentOrmEntity);
-    this.transactionDB = this.tDB.getManager().getRepository(CloudEstablishmentOrmEntity);
+  ) {}
+
+  private repo(): Repository<CloudEstablishmentOrmEntity> {
+    return this.tDB.getManager().getRepository(CloudEstablishmentOrmEntity);
   }
 
   /**
@@ -30,7 +28,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
    */
   async save(cloudEstablishment: CloudEstablishmentEntity): Promise<CloudEstablishmentEntity> {
     try {
-      let ormEntity = await this.repository.findOne({
+      let ormEntity = await this.repo().findOne({
         where: { cloudEstablishmentId: cloudEstablishment.cloudEstablishmentId }, // TypeORM puede necesitar un cast para bigint en algunos casos
       });
 
@@ -45,7 +43,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
         ormEntity = CloudEstablishmentMapper.toOrm(cloudEstablishment);
       }
 
-      const savedOrmEntity = await this.transactionDB.save(ormEntity);
+      const savedOrmEntity = await this.repo().save(ormEntity);
       return CloudEstablishmentMapper.toDomain(savedOrmEntity);
     } catch (error) {
       if (error instanceof QueryFailedError) {
@@ -70,7 +68,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
    * si se encuentra, o `null` si no existe.
    */
   async findById(id: bigint): Promise<CloudEstablishmentEntity | null> {
-    const ormEntity = await this.repository.findOne({
+    const ormEntity = await this.repo().findOne({
       where: { cloudEstablishmentId: id },
       relations: {
         cloudBranchOffices: true
@@ -85,7 +83,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
   }
 
   async findByEnrollmentKey(enrollmentKey: string): Promise<CloudEstablishmentEntity | null> {
-    const ormEntity = await this.repository.findOne({
+    const ormEntity = await this.repo().findOne({
       where: { enrollmentKey },
       relations: {
         cloudBranchOffices: true
@@ -101,11 +99,11 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
 
   async delete(entityId: bigint): Promise<boolean> {
     try {
-      const exist = await this.repository.findOneBy({ cloudEstablishmentId: entityId });
+      const exist = await this.repo().findOneBy({ cloudEstablishmentId: entityId });
       if (!exist) {
         throw new DNotFoundException(`No encontramos el establecimiento en la nube con id ${entityId}.`);
       }
-      await this.repository.query(`DELETE FROM cloud_establishment WHERE(cloud_establishment_id=${entityId});`);
+      await this.repo().query(`DELETE FROM cloud_establishment WHERE(cloud_establishment_id=${entityId});`);
 
       return true;
     } catch (error) {
@@ -118,7 +116,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
   }
 
   async existById(cloudEstablishmentId: bigint): Promise<CloudEstablishmentEntity | null> {
-    const ormEntity = await this.repository.findOne({
+    const ormEntity = await this.repo().findOne({
       where: { cloudEstablishmentId }
     });
 
@@ -130,7 +128,7 @@ export class TypeormCloudEstablishmentRepository implements CloudEstablishmentRe
   }
 
   async existByEnrollmentKey(enrollmentKey: string): Promise<CloudEstablishmentEntity | null> {
-    const ormEntity = await this.repository.findOne({
+    const ormEntity = await this.repo().findOne({
       where: { enrollmentKey }
     });
 
