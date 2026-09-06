@@ -21,6 +21,10 @@ pnpm run migration:generate <migration_name>
 # Este script revierte la ultima migración
 pnpm run migration:revert
 ``` 
+### Documentacion con Open API
+``` bash
+http://localhost:3001/api/docs
+```
 
 ### Instala el manejador de paquetes __pnpm__
 ``` bash
