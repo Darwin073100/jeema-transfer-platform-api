@@ -44,6 +44,8 @@ import { RegisterCloudBranchUseCase } from "./application/use-cases/register-clo
             ]
         }
     ],
-    exports: []
+    exports: [
+        CLOUD_BRANCH_OFFICE_REPOSITORY
+    ]
 })
 export class CloudBranchOfficeModule{}

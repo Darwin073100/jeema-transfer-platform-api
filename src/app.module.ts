@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeormConfigModule } from './config/database/typeorm/typeorm-config.module';
 import { CloudEstablishmentModule } from './contexts/establishment-management/cloud-establishment/cloud-establishment.module';
 import { CloudBranchOfficeModule } from './contexts/establishment-management/cloud-branch-office/cloud-branch-office.module';
+import { CloudTransferModule } from './contexts/transfer-management/cloud-transfer/cloud-transfer.module';
 
 @Module({
   imports: [
@@ -13,7 +14,10 @@ import { CloudBranchOfficeModule } from './contexts/establishment-management/clo
       isGlobal: true,
       envFilePath: ['.env', '.env.development', '.env.production'],
     }),
-    TypeormConfigModule, CloudEstablishmentModule, CloudBranchOfficeModule
+    TypeormConfigModule,
+    CloudEstablishmentModule,
+    CloudBranchOfficeModule,
+    CloudTransferModule,
   ],
 })
 export class AppModule {}

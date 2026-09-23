@@ -4,7 +4,7 @@ import { CloudEstablishmentOrmEntity } from '../../../cloud-establishment/infras
 import { CloudTransferOrmEntity } from 'src/contexts/transfer-management/cloud-transfer/infrastructure/entities/cloud-transfer.orm-entity';
 
 @Entity('cloud_branch_office')
-@Index('uidx_cloud_est_local_branch', ['cloudEstablishmentId', 'localBranchOfficeId'], { unique: true, where: '"deleted_at" IS NULL' })
+@Index('idx_cloud_est_local_branch', ['cloudEstablishmentId', 'localBranchOfficeId'])
 export class CloudBranchOfficeOrmEntity extends TemplateOrmEntity {
   @PrimaryGeneratedColumn('increment',{ name: 'cloud_branch_office_id', type: 'bigint' })
   cloudBranchOfficeId!: bigint;

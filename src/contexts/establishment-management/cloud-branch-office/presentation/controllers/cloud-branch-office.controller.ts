@@ -72,7 +72,7 @@ export class CloudBranchOfficeController {
         description: 'Registra una sucursal adicional en un establecimiento ya existente, validando la enrollmentKey.',
     })
     @ApiCreatedResponse({ description: 'Sucursal creada.', schema: { example: CLOUD_BRANCH_OFFICE_EXAMPLE } })
-    @ApiBadRequestResponse({ description: 'Ya existe una sucursal con ese identificador local en el establecimiento, o el body no pasó las validaciones.' })
+    @ApiBadRequestResponse({ description: 'El body no pasó las validaciones.' })
     @ApiNotFoundResponse({ description: 'No existe un establecimiento con esa enrollmentKey.' })
     async registerCloudBranch(@Body() command: RegisterCloudBranchCommand) {
         try {
